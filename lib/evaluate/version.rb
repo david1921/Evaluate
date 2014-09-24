@@ -1,3 +1,4 @@
+require "rails"
 require "evaluate/version"
 
 module Evaluate
