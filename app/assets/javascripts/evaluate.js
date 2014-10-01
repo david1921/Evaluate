@@ -2,72 +2,90 @@
 //= require evaluate.js
 
 $.support.cors = true;
-
-/*
- $(document).on("click","button",function(){
-  	alert("hello");
-  });
-**/
-$(function ev(){
- $(document).on("click","button",function(){
-  	alert("hello");
-  	$.ajax({
-      data: {category: 'button', action_type: 'click', label: 'mylabel', uuid: 'gqhjqjqjqk', page: 'myfirst'},
-      dataType: "json",
-      type: "POST",
-      url: "http://192.168.112.129:3001/api/" + "events",
-      error: function(xhr){alert("An error occured: " + xhr.status + " " + xhr.statusText);}
-    });
-  
-    $("p").hide();
-  });
-});
-
 var _eval;
+//Click Event Listener
+ $(document).on("click",".eval-click",function(){
+ 
+  var tag = $(this).prop("tagName");
+  var label;
+  var category;
+  if (tag == "BUTTON")
+  {
+  	label = $(this).text();
+  	category = "button";
+  	
+  }
+  else if (tag == "A") 
+  {  
+    label = $(this).text();
+  	category = "link";
+  	if (!label || !label.trim())
+      {
+         label = $(this).attr("href");
+      }
+  		
+  }
+  else if (tag == "INPUT")
+  {
+  	var input_type = $(this).attr('type');
+  	if (input_type == "submit")
+  		{
+  		  label = $(this).attr("value");
+  		  category= "Submit Button"; 
+  		}
+  }
 
-$(function eval(){ 
-$(document).on("click","a", function(e){
- var label = $(this).text();
- if (!label || !label.trim())
- {
-    label = $(this).attr("href");
- }
- _eval.ie({category: 'link',  action_type: 'click', label: label});
+  _eval.ie({category: category,  action_type: 'click', label: label});
+  }); 
 
-  });
-});
 
-function eval_hover(){
+//Hover event Listener
 var interval_id;
-$(document).on("mouseenter","a", function () {
+$(document).on("mouseenter",".eval-hover", function () {
+ var label;
+ var category;
+ var tag = $(this).prop("tagName");
+  if (tag == "BUTTON")
+  {
+  	label = $(this).text();
+  	category = "button";
+  }
+  else if (tag == "A") 
+  {  
+    label = $(this).text();
+  	category = "link";
+  	if (!label || !label.trim())
+      {
+         label = $(this).attr("href");
+      }	
+  }
+  else if (tag == "INPUT")
+  {
+  	var input_type = $(this).attr('type');
+  	if (input_type == "submit")
+  		{
+  		  label = $(this).attr("value");
+  		  category= "Submit Button"; 
+  		}
+  }
 
- var label = $(this).text();
       //set timer
       var t = 0;
        interval_id = setInterval(function () {
         t += 1000; 
         if (t == 5000){
-          _eval.ie({category: 'link',  action_type: 'hovering', label: label});
+          _eval.ie({category: category,  action_type: 'hovering', label: label});
           window.clearInterval(interval_id);
         }
       }, 1000);
     });
 
-$(document).on("mouseleave", "a", function() {
+$(document).on("mouseleave", ".eval-hover", function() {
   window.clearInterval(interval_id);
 });
-}
+
 
 $(function() {
-
-$(document).on("click","button", function(e){
- var label = $(this).text();
- _eval.ie({category: 'button', action_type: 'click', label: label});
-
-  });
-//need to implement in the case of input type image
-
-
 
   function evaluationTracking(parameters) {
 
@@ -81,7 +99,7 @@ $(document).on("click","button", function(e){
 
     this.ie = function ie(parameters) {
       parameters.uuid = this.uuid;
-      parameters.page = p();
+      parameters.page = page();
       a("events", parameters);
       return 0;
     };
@@ -97,12 +115,12 @@ $(document).on("click","button", function(e){
     console.log(action)
     console.log(parameters)
   };
-/**
-  $(document).on('page:load', function() {
-    _eval.ie({category: 'page',  action_type: 'load'});
 
+  $(document).on('page:load', function() {
+   // _eval.ie({category: 'page',  action_type: 'load'});
+alert("hhhh");
   });
-**/
+
   var ap = function() {
       return e("application_name");
     },
@@ -134,12 +152,12 @@ $(document).on("click","button", function(e){
       return e("username");
     }
 
-
- $(function ka(){alert("ooii");});
-
-
   function p() {
     return d("action_name");
+  }
+
+  function page(){
+  	return window.location.pathname;
   }
 
   function e(attribute) {
@@ -160,6 +178,7 @@ $(document).on("click","button", function(e){
 
   _eval = new evaluationTracking({uuid: u()});  
 
+//sending session info
   _eval.s(
     { application_name: ap(),
       application_version: av(),
@@ -172,6 +191,7 @@ $(document).on("click","button", function(e){
       username: un()
     });
 
+//page load
   _eval.ie({category: 'page',  action_type: 'load', load_time: lt()});
 
 
