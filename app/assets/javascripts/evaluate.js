@@ -116,11 +116,6 @@ $(function() {
     console.log(parameters)
   };
 
-  $(document).on('page:load', function() {
-   // _eval.ie({category: 'page',  action_type: 'load'});
-alert("hhhh");
-  });
-
   var ap = function() {
       return e("application_name");
     },
