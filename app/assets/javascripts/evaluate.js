@@ -69,7 +69,7 @@ $(document).on("mouseenter",".eval-hover", function () {
   		}
   }
 
-      //set timer
+      //set mouse timer
       var t = 0;
        interval_id = setInterval(function () {
         t += 1000; 
